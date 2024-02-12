@@ -1,3 +1,6 @@
+"""
+分数类的定义
+"""
 from abc import ABC, abstractmethod
 
 
@@ -79,10 +82,13 @@ class FractionABC(object):
         return f"({self.numerator}/{self.denominator})"
 
 
+
 class RegularFraction(FractionABC):
     """
     正则分数类, 标准的分数, 正常情况
     """
+
+
 
 
 if __name__ == '__main__':
