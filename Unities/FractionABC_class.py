@@ -1,10 +1,11 @@
 """
 分数类的定义
 """
+
 from abc import ABC, abstractmethod
 
 
-class FractionABC(object):
+class FractionABC(ABC):
     """
     抽象分数类, 用于无法判断类型时调用
     """
@@ -31,7 +32,6 @@ class FractionABC(object):
         """
         if self.denominator == 0:
             raise "分母不能为0"
-
 
     def _format(self):
         """
@@ -76,10 +76,25 @@ class FractionABC(object):
         if flg:
             return self._divide_common_factor()
 
-
-
+    @abstractmethod
     def __str__(self):
-        return f"({self.numerator}/{self.denominator})"
+        pass
+
+    @abstractmethod
+    def __add__(self, other):  # 加
+        pass
+
+    @abstractmethod
+    def __sub__(self, other):  # 减
+        pass
+
+    @abstractmethod
+    def __mul__(self, other):  # 乘
+        pass
+
+    @abstractmethod
+    def __truediv__(self, other):  # 除
+        pass
 
 
 
