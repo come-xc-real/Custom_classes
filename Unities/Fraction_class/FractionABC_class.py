@@ -97,13 +97,25 @@ class FractionABC(ABC):
         pass
 
 
-
 class RegularFraction(FractionABC):
     """
     正则分数类, 标准的分数, 正常情况
     """
 
+    def __str__(self):
+        pass
 
+    def __add__(self, other):
+        pass
+
+    def __sub__(self, other):
+        pass
+
+    def __mul__(self, other):
+        pass
+
+    def __truediv__(self, other):
+        pass
 
 
 if __name__ == '__main__':
