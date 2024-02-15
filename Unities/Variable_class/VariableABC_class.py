@@ -36,6 +36,10 @@ class VariableABC(ABC):
     def __truediv__(self, other):  # 除
         pass
 
+    @abstractmethod
+    def __neg__(self):  # 取负 用于直接创建 -对象
+        pass
+
 
 if __name__ == '__main__':
     pass

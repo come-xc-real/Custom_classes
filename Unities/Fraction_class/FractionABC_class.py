@@ -22,6 +22,7 @@ class FractionABC(ABC):
         self.int_value = None
         self._verify_legitimacy()
         self._format()
+        self.type = "Fraction"  # 分数类
 
         self.value = self.numerator / self.denominator
 
@@ -40,11 +41,11 @@ class FractionABC(ABC):
         """
 
         # 符号统一为分子符号 part:1
-        self.symbol = 0
-        if self.numerator <= 0:
+        self.symbol = 0  # 此属性是一个整数类型, 用以确定整个分数的正负, 为偶数时为正
+        if self.numerator < 0:
             self.symbol += 1
             self.numerator = -self.numerator
-        if self.denominator <= 0:
+        if self.denominator < 0:
             self.symbol += 1
             self.denominator = -self.denominator
 
@@ -96,26 +97,11 @@ class FractionABC(ABC):
     def __truediv__(self, other):  # 除
         pass
 
-
-class RegularFraction(FractionABC):
-    """
-    正则分数类, 标准的分数, 正常情况
-    """
-
-    def __str__(self):
+    @abstractmethod
+    def __neg__(self):  # 取负 用于直接创建 -对象
         pass
 
-    def __add__(self, other):
-        pass
 
-    def __sub__(self, other):
-        pass
-
-    def __mul__(self, other):
-        pass
-
-    def __truediv__(self, other):
-        pass
 
 
 if __name__ == '__main__':
