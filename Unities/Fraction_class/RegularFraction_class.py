@@ -53,6 +53,7 @@ class RegularFraction(FractionABC):
         )
 
     def __neg__(self):  # 取负 用于直接创建 -对象
+        # 创建一个分母分子相反的分数类
         return RegularFraction(
             numerator=-self.numerator,
             denominator=self.denominator
