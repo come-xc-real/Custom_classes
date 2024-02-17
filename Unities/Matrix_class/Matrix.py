@@ -6,12 +6,33 @@ class Matrix:
     """
     矩阵类, 用于书写矩阵的相关方法和计算
     """
-    def __init__(self, matrix_body: list):
+
+    def __init__(self, matrix_body: list, is_matrix_body_cleaned=False):
         self.body = matrix_body
-        self.body_cleaned = copy.deepcopy(self.body)     # 深度拷贝矩阵
+        self.body_cleaned = copy.deepcopy(self.body)  # 深度拷贝矩阵
+        self.y_len = len(self.body)     # 矩阵的列长度
+        self.x_len = len(self.body[0])  # 矩阵的行长度
+        self.type = "Matrix"
 
         # 完成self.body_cleaned 的操作
-        self._clean()
+        if not is_matrix_body_cleaned:
+            self._clean()
+        # 完成矩阵字符串的清理
+        self._clean_body()
+
+    def __add__(self, other):
+        if other.type == "Matrix":
+            if self.x_len == other.x_len and self.y_len == other.y_len:
+                matrix_body = copy.deepcopy(self.body)
+                for yi in range(len(matrix_body)):
+                    for xi in range(len(matrix_body[yi])):
+                        matrix_body[yi][xi] = other.body_cleaned[yi][xi] + self.body_cleaned[yi][xi]
+                return Matrix(
+                    matrix_body=matrix_body,
+                    is_matrix_body_cleaned=True
+                )
+            else:
+                raise "无法相加"
 
     def _clean_xi_old(self, xi, power_of_10=0):  # 旧的方案, 会出现一些小数乘以10变成无限循环小数, 所以废弃
         """
@@ -27,9 +48,9 @@ class Matrix:
             return RegularFraction(
                 numerator=int(xi),
                 denominator=(10 ** power_of_10)
-                )
+            )
         else:
-            return self._clean_xi_old(xi*10, power_of_10=power_of_10+1)
+            return self._clean_xi_old(xi * 10, power_of_10=power_of_10 + 1)
 
     def _clean_xi(self, xi):
         """
@@ -65,38 +86,40 @@ class Matrix:
 
     def __str__(self):
         # 完成矩阵的显示
+        return self.body_cleaned_str
+
+    def _clean_body(self):
+        # 完成矩阵的清理
         self.body_cleaned_str = ""  # 矩阵的字符串, 用以返回
         for yi in self.body_cleaned:
             yi_str = ""
             for xi in yi:
                 yi_str += f"{str(xi)},"
             yi_str = f"[{yi_str}]\n"
-            self.body_cleaned_str += yi_str     # 未清理
-        # self.body_cleaned_str = self._clean_body_str()  # 清理后
-        self.body_cleaned_str = self._clean_body_str()
-        return self.body_cleaned_str
+            self.body_cleaned_str += yi_str  # 未清理
+        self.body_cleaned_str = self._clean_body_str()  # 清理后
 
     def _clean_body_str(self):
         """
         用以将矩阵的字符串输出更加标准化
-        :return:
+        :return: clean_res 返回一个清理好的字符串
         """
-        body_yi_str_list = self.body_cleaned_str.split("\n")[:-1]   # 所有yi
-        body_xi_str_list = []   # 所有xi
+        body_yi_str_list = self.body_cleaned_str.split("\n")[:-1]  # 所有yi
+        body_xi_str_list = []  # 所有xi
         for yi_i in range(len(body_yi_str_list)):
             body_xi_str_lst = body_yi_str_list[yi_i].split(",")
             body_xi_str_list.append(body_xi_str_lst)
         # 将xi以,对其
-        body_xi_str_list_new = []   # 对其xi的列表
+        body_xi_str_list_new = []  # 对其xi的列表
         for xi_after_zip in zip(*body_xi_str_list):
             body_xi_str_list_new.append([])
             xi_len_list = []
             for xi in xi_after_zip:
                 xi_len_list.append(len(xi))
-            xi_max_len = max(xi_len_list) # 每一列元素长度
+            xi_max_len = max(xi_len_list)  # 每一列元素长度
             for xi in xi_after_zip:
                 if len(xi) < xi_max_len:
-                    xi_res = xi + (" " * (xi_max_len-len(xi)))
+                    xi_res = xi + (" " * (xi_max_len - len(xi)))
                     body_xi_str_list_new[-1].append(xi_res)
                 else:
                     xi_res = xi
@@ -111,19 +134,21 @@ class Matrix:
         return clean_res
 
 
-
-
-
-
-
-
-
 if __name__ == '__main__':
-    m = Matrix([
+    m_2 = Matrix([
         [1, 3, 5, 2.5, 4.004],
-        [2, 3, 5.04, 6, 8]
+        [2, 3, 5.04, 6, 8],
+        [1.0000001, 2, 3, 4, 5]
     ])
-    print(m)
+    m_1 = Matrix([
+        [1, 3, 5, 2.5, 4.004],
+        [2, 3, 5.04, 6, 8],
+        [1.0000001, 2, 3, 4, 5]
+    ])
+    print(m_1)
+    print(m_2)
+    print(m_2 + m_1)
+
     # for i in m.body_cleaned:
     #     for j in i:
     #         print(j)
