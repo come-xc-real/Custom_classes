@@ -1,6 +1,7 @@
 import copy
 from Unities.Fraction_class.RegularFraction_class import RegularFraction
 
+
 class Matrix:
     """
     矩阵类, 用于书写矩阵的相关方法和计算
@@ -62,10 +63,68 @@ class Matrix:
                 # 对矩阵元素分数化
                 self.body_cleaned[yi][xi] = self._clean_xi(self.body_cleaned[yi][xi])
 
+    def __str__(self):
+        # 完成矩阵的显示
+        self.body_cleaned_str = ""  # 矩阵的字符串, 用以返回
+        for yi in self.body_cleaned:
+            yi_str = ""
+            for xi in yi:
+                yi_str += f"{str(xi)},"
+            yi_str = f"[{yi_str}]\n"
+            self.body_cleaned_str += yi_str     # 未清理
+        # self.body_cleaned_str = self._clean_body_str()  # 清理后
+        self.body_cleaned_str = self._clean_body_str()
+        return self.body_cleaned_str
+
+    def _clean_body_str(self):
+        """
+        用以将矩阵的字符串输出更加标准化
+        :return:
+        """
+        body_yi_str_list = self.body_cleaned_str.split("\n")[:-1]   # 所有yi
+        body_xi_str_list = []   # 所有xi
+        for yi_i in range(len(body_yi_str_list)):
+            body_xi_str_lst = body_yi_str_list[yi_i].split(",")
+            body_xi_str_list.append(body_xi_str_lst)
+        # 将xi以,对其
+        body_xi_str_list_new = []   # 对其xi的列表
+        for xi_after_zip in zip(*body_xi_str_list):
+            body_xi_str_list_new.append([])
+            xi_len_list = []
+            for xi in xi_after_zip:
+                xi_len_list.append(len(xi))
+            xi_max_len = max(xi_len_list) # 每一列元素长度
+            for xi in xi_after_zip:
+                if len(xi) < xi_max_len:
+                    xi_res = xi + (" " * (xi_max_len-len(xi)))
+                    body_xi_str_list_new[-1].append(xi_res)
+                else:
+                    xi_res = xi
+                    body_xi_str_list_new[-1].append(xi_res)
+        body_xi_str_list_new = list(zip(*body_xi_str_list_new))
+        clean_res = ""
+        for yi in body_xi_str_list_new:
+            yi_str = ""
+            for xi in yi:
+                yi_str += f"{xi}, "
+            clean_res += f"{yi_str}\n"
+        return clean_res
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
-    m = Matrix([[1, 3, 5, 2.5, 4.004]])
-    for i in m.body_cleaned:
-        for j in i:
-            print(j)
+    m = Matrix([
+        [1, 3, 5, 2.5, 4.004],
+        [2, 3, 5.04, 6, 8]
+    ])
+    print(m)
+    # for i in m.body_cleaned:
+    #     for j in i:
+    #         print(j)
     # print(4.004 * 1000)
