@@ -1,0 +1,58 @@
+{
+  "survey_id": 14190657,
+  "hash": "a0f0",
+  "answer_survey": {
+    "duration": 4902,
+    "ua": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Mobile Safari/537.36 Edg/121.0.0.0",
+    "referrer": "",
+    "uid": "58cc8637-1595-4f1e-92bb-dd489dfd75f6",
+    "sid": "d2741b1b-550b-42ee-aa46-8af8cc7a4460",
+    "openid": "",
+    "pages": [
+      {
+        "id": "p-1-89e2",
+        "questions": [
+          {
+            "id": "q-1-cb6f",
+            "type": "radio",
+            "blanks": [],
+            "options": [
+              {
+                "id": "o-104-687f",
+                "checked": 1,
+                "text": "喜欢"
+              }
+            ]
+          },
+          {
+            "id": "q-2-f961",
+            "type": "checkbox",
+            "blanks": [],
+            "options": [
+              {
+                "id": "o-101-c2c8",
+                "checked": 1,
+                "text": "吃席"
+              }
+            ]
+          },
+          {
+            "id": "q-3-Wsxn",
+            "type": "radio",
+            "blanks": [],
+            "options": [
+              {
+                "id": "o-0-kw2p",
+                "checked": 1,
+                "text": "喜庆的"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "latitude": null,
+    "longitude": null,
+    "is_update": false
+  }
+}
