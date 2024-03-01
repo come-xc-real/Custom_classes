@@ -1,16 +1,20 @@
 import copy
 from Unities.Fraction_class.RegularFraction_class import RegularFraction
 
+"""
+此文中的row是列的意思
+"""
+
 
 class Matrix:
     """
     矩阵类, 用于书写矩阵的相关方法和计算
     """
 
-    def __init__(self, matrix_body: list, is_matrix_body_cleaned=False):
+    def __init__(self, matrix_body: list, is_matrix_body_cleaned: bool = False):
         self.body = matrix_body
         self.body_cleaned = copy.deepcopy(self.body)  # 深度拷贝矩阵
-        self.y_len = len(self.body)     # 矩阵的列长度
+        self.y_len = len(self.body)  # 矩阵的列长度
         self.x_len = len(self.body[0])  # 矩阵的行长度
         self.type = "Matrix"
 
@@ -34,7 +38,7 @@ class Matrix:
             else:
                 raise "无法相加"
 
-    def _clean_xi_old(self, xi, power_of_10=0):  # 旧的方案, 会出现一些小数乘以10变成无限循环小数, 所以废弃
+    def _clean_xi_old(self, xi, power_of_10: int = 0):  # 旧的方案, 会出现一些小数乘以10变成无限循环小数, 所以废弃
         """
         对矩阵元素分数化
         :param xi: 初始值
@@ -99,7 +103,7 @@ class Matrix:
             self.body_cleaned_str += yi_str  # 未清理
         self.body_cleaned_str = self._clean_body_str()  # 清理后
 
-    def _clean_body_str(self):
+    def _clean_body_str(self) -> str:
         """
         用以将矩阵的字符串输出更加标准化
         :return: clean_res 返回一个清理好的字符串
@@ -133,6 +137,70 @@ class Matrix:
             clean_res += f"{yi_str}\n"
         return clean_res
 
+    def minimalist_matrix_by_row(self, row_index_list=None):
+        """
+        行最简化矩阵
+        :return: 一个新的矩阵类
+        """
+        minimalist_matrix_body = copy.deepcopy(self.body_cleaned)
+        if row_index_list is None:
+            # 初始化row_index_list
+            row_index_list = list(range(min(self.x_len, self.y_len)))
+
+        flg_list = []  # 用于存储第几列全是0
+        for row_index in row_index_list:
+            is_not_all_0 = False
+            for y_i in range(len(minimalist_matrix_body)):
+                if minimalist_matrix_body[y_i][row_index].numerator != 0:
+                    is_not_all_0 = True
+            flg_list.append(is_not_all_0)
+
+        is_ok = True
+        for flg in flg_list:
+            if not flg:
+                is_ok = False
+        if not is_ok:
+            raise "无法完成对应行的最简化"
+
+        for row_index, y_i in zip(row_index_list, range(min(self.x_len, self.y_len))):
+            if minimalist_matrix_body[y_i][row_index].numerator == 0:
+                minimalist_matrix_body = self._make_sure_row_not_0(minimalist_matrix_body, row_index, y_i)
+
+            minimalist_matrix_body[y_i] = [x_i / minimalist_matrix_body[y_i][row_index] for x_i in
+                                           minimalist_matrix_body[y_i]]
+            minimalist_matrix_body = self._make_other_row_0(minimalist_matrix_body, row_index, y_i)
+            # 此处写行转换
+            break
+
+        return Matrix(
+            matrix_body=minimalist_matrix_body,
+            is_matrix_body_cleaned=True,
+        )
+
+    def _make_sure_row_not_0(self, minimalist_matrix_body, row_index, y_i):
+        for y_i_i in range(len(minimalist_matrix_body)):
+            if minimalist_matrix_body[y_i_i][row_index].numerator != 0:
+                minimalist_matrix_body[y_i] = [x_i + x_i_i for x_i, x_i_i in
+                                               zip(minimalist_matrix_body[y_i], minimalist_matrix_body[y_i_i])]
+                break
+        return minimalist_matrix_body
+
+    def _make_other_row_0(self, minimalist_matrix_body, row_index, y_i):
+        for y_i_i in range(self.y_len):
+            if y_i != y_i_i:
+                if minimalist_matrix_body[y_i_i][row_index].numerator != 0:
+                    minimalist_matrix_body[y_i_i] = [x_i_i - (x_i * x_i_i) for x_i, x_i_i in
+                                                     zip(minimalist_matrix_body[y_i], minimalist_matrix_body[y_i_i])]
+        return minimalist_matrix_body
+
+    def _make_other_line_0(self, minimalist_matrix_body, row_index, y_i):
+        for y_i_i in range(self.x_len):
+            if y_i != y_i_i:
+                if minimalist_matrix_body[y_i_i][row_index].numerator != 0:
+                    minimalist_matrix_body[y_i_i] = [x_i_i - (x_i * x_i_i) for x_i, x_i_i in
+                                                     zip(minimalist_matrix_body[y_i], minimalist_matrix_body[y_i_i])]
+        return minimalist_matrix_body
+
 
 if __name__ == '__main__':
     m_2 = Matrix([
@@ -141,13 +209,16 @@ if __name__ == '__main__':
         [1.0000001, 2, 3, 4, 5]
     ])
     m_1 = Matrix([
-        [1, 3, 5, 2.5, 4.004],
-        [2, 3, 5.04, 6, 8],
-        [1.0000001, 2, 3, 4, 5]
+        [0, 3, 5, 2.5, 4.004],
+        [1, 3, 5.04, 6, 8],
+        [0, 2, 3, 4, 5]
     ])
     print(m_1)
-    print(m_2)
-    print(m_2 + m_1)
+    # print(m_2)
+    # print(m_2 + m_1)
+    m_1_minimalist = m_1.minimalist_matrix_by_row()
+    print(m_1_minimalist)
+    print(m_1)
 
     # for i in m.body_cleaned:
     #     for j in i:
