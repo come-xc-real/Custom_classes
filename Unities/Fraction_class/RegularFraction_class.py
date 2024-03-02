@@ -1,4 +1,4 @@
-from .FractionABC_class import FractionABC
+from Unities.Fraction_class.FractionABC_class import FractionABC
 
 
 class RegularFraction(FractionABC):
