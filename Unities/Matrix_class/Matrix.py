@@ -169,37 +169,41 @@ class Matrix:
             minimalist_matrix_body[y_i] = [x_i / minimalist_matrix_body[y_i][row_index] for x_i in
                                            minimalist_matrix_body[y_i]]
             minimalist_matrix_body = self._make_other_row_0(minimalist_matrix_body, row_index, y_i)
-            # 此处写行转换
-            break
+
+            # # 此处写列转换
+            # minimalist_matrix_body = self._make_other_line_0(minimalist_matrix_body, row_index, y_i)
 
         return Matrix(
             matrix_body=minimalist_matrix_body,
             is_matrix_body_cleaned=True,
         )
 
-    def _make_sure_row_not_0(self, minimalist_matrix_body, row_index, y_i):
-        for y_i_i in range(len(minimalist_matrix_body)):
+    def _make_sure_row_not_0(self, minimalist_matrix_body, row_index, y_i) -> list:
+        for y_i_i in range(self.y_len):
             if minimalist_matrix_body[y_i_i][row_index].numerator != 0:
                 minimalist_matrix_body[y_i] = [x_i + x_i_i for x_i, x_i_i in
                                                zip(minimalist_matrix_body[y_i], minimalist_matrix_body[y_i_i])]
                 break
         return minimalist_matrix_body
 
-    def _make_other_row_0(self, minimalist_matrix_body, row_index, y_i):
+    def _make_other_row_0(self, minimalist_matrix_body, row_index, y_i) -> list:
         for y_i_i in range(self.y_len):
             if y_i != y_i_i:
                 if minimalist_matrix_body[y_i_i][row_index].numerator != 0:
-                    minimalist_matrix_body[y_i_i] = [x_i_i - (x_i * x_i_i) for x_i, x_i_i in
+                    minimalist_matrix_body[y_i_i] = [x_i_i - (x_i * minimalist_matrix_body[y_i_i][row_index]) for
+                                                     x_i, x_i_i in
                                                      zip(minimalist_matrix_body[y_i], minimalist_matrix_body[y_i_i])]
         return minimalist_matrix_body
 
-    def _make_other_line_0(self, minimalist_matrix_body, row_index, y_i):
-        for y_i_i in range(self.x_len):
-            if y_i != y_i_i:
-                if minimalist_matrix_body[y_i_i][row_index].numerator != 0:
-                    minimalist_matrix_body[y_i_i] = [x_i_i - (x_i * x_i_i) for x_i, x_i_i in
-                                                     zip(minimalist_matrix_body[y_i], minimalist_matrix_body[y_i_i])]
-        return minimalist_matrix_body
+    # def _make_other_line_0(self, minimalist_matrix_body, row_index, y_i) -> list:
+    #     minimalist_matrix_body = list(zip(*minimalist_matrix_body))
+    #     for y_i_i in range(self.y_len):
+    #         if y_i != y_i_i:
+    #             if minimalist_matrix_body[y_i_i][row_index].numerator != 0:
+    #                 minimalist_matrix_body[y_i_i] = [x_i_i - (x_i * x_i_i) for x_i, x_i_i in
+    #                                                  zip(minimalist_matrix_body[y_i], minimalist_matrix_body[y_i_i])]
+    #     minimalist_matrix_body = list(zip(*minimalist_matrix_body))
+    #     return minimalist_matrix_body
 
 
 if __name__ == '__main__':

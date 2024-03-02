@@ -34,6 +34,8 @@ class FractionABC(ABC):
         if self.denominator == 0:
             raise "分母不能为0"
 
+
+
     def _format(self):
         """
         格式化
@@ -60,6 +62,10 @@ class FractionABC(ABC):
         # 如果可以是一个整数, 将 self.int_value 赋值
         if self.denominator == 1:
             self.int_value = self.numerator
+
+        # 如果分子为0, 将分母变成1, 方便观看
+        if self.numerator == 0:
+            self.denominator = 1
 
     def _divide_common_factor(self):
         """
