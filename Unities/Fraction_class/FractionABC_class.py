@@ -19,6 +19,7 @@ class FractionABC(ABC):
         """
         self.numerator = numerator
         self.denominator = denominator
+
         self.int_value = None
         self._verify_legitimacy()
         self._format()

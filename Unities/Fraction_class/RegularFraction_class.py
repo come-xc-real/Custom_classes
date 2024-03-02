@@ -1,4 +1,4 @@
-from Unities.Fraction_class.FractionABC_class import FractionABC
+from .FractionABC_class import FractionABC
 
 
 class RegularFraction(FractionABC):
@@ -17,8 +17,10 @@ class RegularFraction(FractionABC):
         if other.type == "RegularFraction":
             # 如果是和一个简单分数相加, 返回另一个分数
             return RegularFraction(
-                numerator=((self.numerator * other.denominator) +
-                           (self.denominator * other.numerator)),
+                numerator=(
+                        + (self.numerator * other.denominator)
+                        + (self.denominator * other.numerator)
+                ),
                 denominator=(self.denominator * other.denominator)
             )
         # 由于无法完成int + Fraction 所以此处有一定问题
@@ -53,7 +55,7 @@ class RegularFraction(FractionABC):
         )
 
     def __neg__(self):  # 取负 用于直接创建 -对象
-        # 创建一个分母分子相反的分数类
+        # 创建一个分子为相反数的分数类
         return RegularFraction(
             numerator=-self.numerator,
             denominator=self.denominator

@@ -24,7 +24,7 @@ class Matrix:
         # 完成矩阵字符串的清理
         self._clean_body()
 
-    def __add__(self, other):
+    def __add__(self, other):  # 加
         if other.type == "Matrix":
             if self.x_len == other.x_len and self.y_len == other.y_len:
                 matrix_body = copy.deepcopy(self.body)
@@ -37,6 +37,20 @@ class Matrix:
                 )
             else:
                 raise "无法相加"
+
+    def __sub__(self, other):  # 减
+        if other.type == "Matrix":
+            return self.__add__(-other)
+
+    def __neg__(self):  # 取负 用于直接创建 -对象
+        negative_matrix = copy.deepcopy(self.body_cleaned)
+        for yi in range(self.y_len):
+            for xi in range(self.x_len):
+                negative_matrix[yi][xi] = -negative_matrix[yi][xi]
+        return Matrix(
+            matrix_body=negative_matrix,
+            is_matrix_body_cleaned=True,
+        )
 
     def _clean_xi_old(self, xi, power_of_10: int = 0):  # 旧的方案, 会出现一些小数乘以10变成无限循环小数, 所以废弃
         """
@@ -204,6 +218,11 @@ class Matrix:
     #                                                  zip(minimalist_matrix_body[y_i], minimalist_matrix_body[y_i_i])]
     #     minimalist_matrix_body = list(zip(*minimalist_matrix_body))
     #     return minimalist_matrix_body
+    def matrix_transpose(self):
+        return Matrix(
+            matrix_body=list(zip(*copy.deepcopy(self.body_cleaned))),
+            is_matrix_body_cleaned=True,
+        )
 
 
 if __name__ == '__main__':
@@ -220,9 +239,13 @@ if __name__ == '__main__':
     print(m_1)
     # print(m_2)
     # print(m_2 + m_1)
-    m_1_minimalist = m_1.minimalist_matrix_by_row()
+    m_1_minimalist = m_1.minimalist_matrix_by_row(row_index_list=[0,2,1])
     print(m_1_minimalist)
-    print(m_1)
+    # print(m_1)
+    # m_1_transpose = m_1.matrix_transpose()
+    # print(m_1_transpose)
+    # m_1_negative = -m_1
+    # print(m_1_negative)
 
     # for i in m.body_cleaned:
     #     for j in i:
