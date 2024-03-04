@@ -5,6 +5,7 @@ from Unities.Variable_class.RegularVariable_class import RegularVariable
 
 
 class VariableFraction(RegularFraction):
+    """含参分数类"""
     def __init__(self, numerator: int, denominator: int,
                  numerator_variable_list: list,
                  denominator_variable_list: list):
@@ -72,11 +73,26 @@ class VariableFraction(RegularFraction):
                 denominator_variable_list=[RegularVariable("")]
             )
         elif other.type == "RegularVariable":
+            numerator_variable_list_new = list(copy.deepcopy(self.numerator_variable_list))
+            numerator_variable_list_new.append(copy.deepcopy(other))
             return VariableFraction(
                 numerator=self.numerator,
                 denominator=self.denominator,
-                numerator_variable_list=copy.deepcopy(self.numerator_variable_list),
+                numerator_variable_list=numerator_variable_list_new,
                 denominator_variable_list=copy.deepcopy(self.denominator_variable_list)
+            )
+        elif other.type == "VariableFraction":
+            numerator_variable_list_new = list(copy.deepcopy(self.numerator_variable_list))
+            for numerator_variable in other.numerator_variable_list:
+                numerator_variable_list_new.append(numerator_variable)
+            denominator_variable_list_new = copy.deepcopy(self.denominator_variable_list)
+            for denominator_variable in other.denominator_variable_list:
+                denominator_variable_list_new.append(denominator_variable)
+            return VariableFraction(
+                numerator=self.numerator * other.numerator,
+                denominator=self.denominator * other.denominator,
+                numerator_variable_list=numerator_variable_list_new,
+                denominator_variable_list=denominator_variable_list_new
             )
 
     def __truediv__(self, other):  # 除
@@ -89,11 +105,13 @@ class VariableFraction(RegularFraction):
                 )
             )
         elif other.type == "RegularVariable":
+            denominator_variable_list_new = copy.deepcopy(self.denominator_variable_list)
+            denominator_variable_list_new.append(other)
             return VariableFraction(
                 numerator=self.numerator,
                 denominator=self.denominator,
-                numerator_variable_list=copy.deepcopy(other.denominator_variable),
-                denominator_variable_list=copy.deepcopy(other.numerator_variable)
+                numerator_variable_list=copy.deepcopy(self.numerator_variable_list),
+                denominator_variable_list=denominator_variable_list_new
             )
 
     def __neg__(self):  # 取负 用于直接创建 -对象
@@ -103,7 +121,7 @@ class VariableFraction(RegularFraction):
             denominator=self.denominator,
             numerator_variable_list=copy.deepcopy(self.numerator_variable_list),
             denominator_variable_list=copy.deepcopy(self.denominator_variable_list)
-        ),
+        )
 
 
 if __name__ == '__main__':
@@ -111,5 +129,7 @@ if __name__ == '__main__':
     y = RegularVariable("y")
     vf = VariableFraction(1, 3, [x, y], [y])
     vf_1 = VariableFraction(1, 3, [x, y], [y])
-    print(-vf_1)
+    print(vf)
     print(-vf)
+    print(-vf_1)
+    # print(vf * vf_1)

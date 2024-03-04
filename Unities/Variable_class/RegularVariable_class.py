@@ -26,5 +26,4 @@ class RegularVariable(VariableABC):
 if __name__ == '__main__':
     rv_x = RegularVariable("x")
     rv_y = RegularVariable("y")
-    rv_x.add_variable(rv_y)
     print(rv_x)
