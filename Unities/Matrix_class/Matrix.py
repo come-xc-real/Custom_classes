@@ -239,7 +239,7 @@ if __name__ == '__main__':
     print(m_1)
     # print(m_2)
     # print(m_2 + m_1)
-    m_1_minimalist = m_1.minimalist_matrix_by_row(row_index_list=[0,2,1])
+    m_1_minimalist = m_1.minimalist_matrix_by_row(row_index_list=[0, 2, 1])
     print(m_1_minimalist)
     # print(m_1)
     # m_1_transpose = m_1.matrix_transpose()
