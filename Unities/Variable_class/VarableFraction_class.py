@@ -6,6 +6,7 @@ from Unities.Variable_class.RegularVariable_class import RegularVariable
 
 class VariableFraction(RegularFraction):
     """含参分数类"""
+
     def __init__(self, numerator: int, denominator: int,
                  numerator_variable_list: list,
                  denominator_variable_list: list):
@@ -70,7 +71,7 @@ class VariableFraction(RegularFraction):
                 numerator=self.numerator * other.numerator,
                 denominator=self.denominator * other.denominator,
                 numerator_variable_list=copy.deepcopy(self.numerator_variable_list),
-                denominator_variable_list=[RegularVariable("")]
+                denominator_variable_list=copy.deepcopy(self.denominator_variable_list)
             )
         elif other.type == "RegularVariable":
             numerator_variable_list_new = list(copy.deepcopy(self.numerator_variable_list))
@@ -112,6 +113,15 @@ class VariableFraction(RegularFraction):
                 denominator=self.denominator,
                 numerator_variable_list=copy.deepcopy(self.numerator_variable_list),
                 denominator_variable_list=denominator_variable_list_new
+            )
+        elif other.type == "VariableFraction":
+            return self.__mul__(
+                VariableFraction(
+                    numerator=self.denominator,
+                    denominator=self.numerator,
+                    numerator_variable_list=copy.deepcopy(self.denominator_variable_list),
+                    denominator_variable_list=copy.deepcopy(self.numerator_variable_list)
+                )
             )
 
     def __neg__(self):  # 取负 用于直接创建 -对象

@@ -1,3 +1,5 @@
+import copy
+
 from Unities.Fraction_class.FractionABC_class import FractionABC
 from Unities.Variable_class.Polynomial_class import Polynomial
 from Unities.Variable_class.RegularVariable_class import RegularVariable
@@ -30,7 +32,7 @@ class RegularFraction(FractionABC):
             # 如果和整数相加, 将整数转换成底数为1的分数
             return self.__add__(other=RegularFraction(other, 1))
 
-        elif other.type == "RegularVariable":
+        elif other.type == "RegularVariable" or "VariableFraction":
             # 返回多项式
             return Polynomial(
                 polynomial_body_list=[
@@ -58,6 +60,14 @@ class RegularFraction(FractionABC):
                 numerator_variable_list=[other],
                 denominator_variable_list=[RegularVariable("")]
             )
+        elif other.type == "VariableFraction":
+            from Unities.Variable_class.VarableFraction_class import VariableFraction
+            return VariableFraction(
+                numerator=self.numerator * other.numerator,
+                denominator=self.denominator * other.denominator,
+                numerator_variable_list=copy.deepcopy(other.numerator_variable_list),
+                denominator_variable_list=copy.deepcopy(other.denominator_variable_list)
+            )
 
     def __truediv__(self, other):  # 除
         # 乘 1/other
@@ -75,6 +85,16 @@ class RegularFraction(FractionABC):
                 denominator=self.denominator,
                 numerator_variable_list=[RegularVariable("")],
                 denominator_variable_list=[other]
+            )
+        elif other.type == "VariableFraction":
+            from Unities.Variable_class.VarableFraction_class import VariableFraction
+            return self.__mul__(
+                VariableFraction(
+                    numerator=self.denominator,
+                    denominator=self.numerator,
+                    numerator_variable_list=copy.deepcopy(self.denominator_variable_list),
+                    denominator_variable_list=copy.deepcopy(self.numerator_variable_list)
+                )
             )
 
     def __neg__(self):  # 取负 用于直接创建 -对象
