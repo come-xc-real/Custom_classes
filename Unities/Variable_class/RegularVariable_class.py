@@ -11,16 +11,28 @@ class RegularVariable(VariableABC):
         return f"{self.char}"
 
     def __add__(self, other):
-        pass
+        return other.__add__(
+            other=RegularVariable(char=self.char)
+        )
 
     def __sub__(self, other):
-        pass
+        return other.__sub__(
+            other=RegularVariable(char=self.char)
+        )
 
     def __mul__(self, other):
-        pass
+        return other.__mul__(
+            other=RegularVariable(char=self.char)
+        )
 
     def __truediv__(self, other):
-        pass
+        from Unities.Variable_class.VarableFraction_class import VariableFraction
+        return VariableFraction(
+            numerator=-1,
+            denominator=1,
+            numerator_variable_list=[RegularVariable(char=self.char)],
+            denominator_variable_list=[RegularVariable(char="")]
+        )
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import copy
 
 from Unities.Fraction_class.RegularFraction_class import RegularFraction
-from Unities.Variable_class.RegularVariable_class import RegularVariable
+
 
 
 class VariableFraction(RegularFraction):
@@ -26,9 +26,9 @@ class VariableFraction(RegularFraction):
         return f"({self.numerator}{numerator_variable_str}/{self.denominator}{denominator_variable_str})"
 
     def __add__(self, other):  # 加
-        if other.type == "RegularFraction":
-            # 返回多项式
+        if other.type == "RegularVariable" or "VariableFraction" or "RegularFraction":
             from Unities.Variable_class.Polynomial_class import Polynomial
+            # 返回多项式
             return Polynomial(
                 polynomial_body_list=[
                     VariableFraction(
@@ -40,24 +40,15 @@ class VariableFraction(RegularFraction):
                     other
                 ]
             )
-        # 由于无法完成int + Fraction 所以此处有一定问题
-        # elif type(other) == int:
-        #     # 如果和整数相加, 将整数转换成底数为1的分数
-        #     return self.__add__(other=RegularFraction(other, 1))
-
-        elif other.type == "RegularVariable" or "VariableFraction":
+        elif other.type == "Polynomial":
             from Unities.Variable_class.Polynomial_class import Polynomial
-            # 返回多项式
-            return Polynomial(
-                polynomial_body_list=[
-                    VariableFraction(
-                        numerator=self.numerator,
-                        denominator=self.denominator,
-                        numerator_variable_list=copy.deepcopy(self.numerator_variable_list),
-                        denominator_variable_list=copy.deepcopy(self.denominator_variable_list)
-                    ),
-                    other
-                ]
+            return other.__add__(
+                other=VariableFraction(
+                    numerator=self.numerator,
+                    denominator=self.denominator,
+                    numerator_variable_list=copy.deepcopy(self.numerator_variable_list),
+                    denominator_variable_list=copy.deepcopy(self.denominator_variable_list)
+                )
             )
 
     def __sub__(self, other):  # 减
@@ -95,6 +86,20 @@ class VariableFraction(RegularFraction):
                 numerator_variable_list=numerator_variable_list_new,
                 denominator_variable_list=denominator_variable_list_new
             )
+        elif other.type == "Polynomial":
+            from Unities.Variable_class.Polynomial_class import Polynomial
+            return other.__mul__(
+                other=Polynomial(
+                    polynomial_body_list=[
+                        VariableFraction(
+                            numerator=self.numerator,
+                            denominator=self.denominator,
+                            numerator_variable_list=copy.deepcopy(self.numerator_variable_list),
+                            denominator_variable_list=copy.deepcopy(self.denominator_variable_list)
+                        )
+                    ]
+                )
+            )
 
     def __truediv__(self, other):  # 除
         # 乘 1/other
@@ -123,6 +128,8 @@ class VariableFraction(RegularFraction):
                     denominator_variable_list=copy.deepcopy(self.numerator_variable_list)
                 )
             )
+        elif other.type == "Polynomial":
+            pass
 
     def __neg__(self):  # 取负 用于直接创建 -对象
         # 创建一个分子为相反数的分数类
@@ -135,6 +142,7 @@ class VariableFraction(RegularFraction):
 
 
 if __name__ == '__main__':
+    from Unities.Variable_class.RegularVariable_class import RegularVariable
     x = RegularVariable("x")
     y = RegularVariable("y")
     vf = VariableFraction(1, 3, [x, y], [y])
