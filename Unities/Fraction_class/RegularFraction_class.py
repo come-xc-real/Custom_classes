@@ -1,8 +1,6 @@
 import copy
 
 from Unities.Fraction_class.FractionABC_class import FractionABC
-from Unities.Variable_class.Polynomial_class import Polynomial
-from Unities.Variable_class.RegularVariable_class import RegularVariable
 
 
 class RegularFraction(FractionABC):
@@ -28,17 +26,30 @@ class RegularFraction(FractionABC):
                 denominator=(self.denominator * other.denominator)
             )
         # 由于无法完成int + Fraction 所以此处有一定问题
-        elif type(other) == int:
-            # 如果和整数相加, 将整数转换成底数为1的分数
-            return self.__add__(other=RegularFraction(other, 1))
+        # elif type(other) == int:
+        #     # 如果和整数相加, 将整数转换成底数为1的分数
+        #     return self.__add__(other=RegularFraction(other, 1))
 
         elif other.type == "RegularVariable" or "VariableFraction":
             # 返回多项式
+            from Unities.Variable_class.Polynomial_class import Polynomial
             return Polynomial(
                 polynomial_body_list=[
                     RegularFraction(numerator=self.numerator, denominator=self.denominator),
                     other
                 ]
+            )
+        elif other.type == "Polynomial":
+            from Unities.Variable_class.Polynomial_class import Polynomial
+            polynomial_body_list_new = copy.deepcopy(other.polynomial_body_list)
+            polynomial_body_list_new.append(
+                RegularFraction(
+                    numerator=self.numerator,
+                    denominator=self.denominator
+                )
+            )
+            return Polynomial(
+                polynomial_body_list=polynomial_body_list_new
             )
 
     def __sub__(self, other):  # 减
@@ -54,6 +65,7 @@ class RegularFraction(FractionABC):
             )
         elif other.type == "RegularVariable":
             from Unities.Variable_class.VarableFraction_class import VariableFraction
+            from Unities.Variable_class.RegularVariable_class import RegularVariable
             return VariableFraction(
                 numerator=self.numerator,
                 denominator=self.denominator,
@@ -68,6 +80,18 @@ class RegularFraction(FractionABC):
                 numerator_variable_list=copy.deepcopy(other.numerator_variable_list),
                 denominator_variable_list=copy.deepcopy(other.denominator_variable_list)
             )
+        elif other.type == "Polynomial":
+            from Unities.Variable_class.Polynomial_class import Polynomial
+            return other.__mul__(
+                other=Polynomial(
+                    polynomial_body_list=[
+                        RegularFraction(
+                            numerator=self.numerator,
+                            denominator=self.denominator
+                        )
+                    ]
+                )
+            )
 
     def __truediv__(self, other):  # 除
         # 乘 1/other
@@ -80,6 +104,7 @@ class RegularFraction(FractionABC):
             )
         elif other.type == "RegularVariable":
             from Unities.Variable_class.VarableFraction_class import VariableFraction
+            from Unities.Variable_class.RegularVariable_class import RegularVariable
             return VariableFraction(
                 numerator=self.numerator,
                 denominator=self.denominator,
@@ -90,10 +115,10 @@ class RegularFraction(FractionABC):
             from Unities.Variable_class.VarableFraction_class import VariableFraction
             return self.__mul__(
                 VariableFraction(
-                    numerator=self.denominator,
-                    denominator=self.numerator,
-                    numerator_variable_list=copy.deepcopy(self.denominator_variable_list),
-                    denominator_variable_list=copy.deepcopy(self.numerator_variable_list)
+                    numerator=other.denominator,
+                    denominator=other.numerator,
+                    numerator_variable_list=copy.deepcopy(other.denominator_variable_list),
+                    denominator_variable_list=copy.deepcopy(other.numerator_variable_list)
                 )
             )
 
@@ -106,6 +131,8 @@ class RegularFraction(FractionABC):
 
 
 if __name__ == '__main__':
+    from Unities.Variable_class.RegularVariable_class import RegularVariable
+
     rf_1 = RegularFraction(7, 3)
     rf_2 = RegularFraction(7, 3)
     # print(rf_1 / rf_2)
