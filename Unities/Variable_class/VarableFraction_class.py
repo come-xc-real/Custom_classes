@@ -3,7 +3,6 @@ import copy
 from Unities.Fraction_class.RegularFraction_class import RegularFraction
 
 
-
 class VariableFraction(RegularFraction):
     """含参分数类"""
 
@@ -15,6 +14,16 @@ class VariableFraction(RegularFraction):
 
         self.denominator_variable_list = denominator_variable_list
         self.type = "VariableFraction"
+        self._clean_variable()
+
+    def _clean_variable(self):
+        for i in range(len(self.numerator_variable_list)):
+            for j in range(len(self.denominator_variable_list)):
+                if self.numerator_variable_list[i].char == self.denominator_variable_list[j].char:
+                    self.numerator_variable_list[i].char = ""
+                    self.denominator_variable_list[j].char = ""
+                    continue
+
 
     def __str__(self):
         numerator_variable_str = ""
@@ -143,6 +152,7 @@ class VariableFraction(RegularFraction):
 
 if __name__ == '__main__':
     from Unities.Variable_class.RegularVariable_class import RegularVariable
+
     x = RegularVariable("x")
     y = RegularVariable("y")
     vf = VariableFraction(1, 3, [x, y], [y])
