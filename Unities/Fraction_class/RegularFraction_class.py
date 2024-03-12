@@ -51,6 +51,13 @@ class RegularFraction(FractionABC):
             return Polynomial(
                 polynomial_body_list=polynomial_body_list_new
             )
+        elif other.type == "PolynomialFraction":
+            return other.__add__(
+                other=RegularFraction(
+                    numerator=self.numerator,
+                    denominator=self.denominator
+                )
+            )
 
     def __sub__(self, other):  # 减
         # 加负other
@@ -92,6 +99,13 @@ class RegularFraction(FractionABC):
                     ]
                 )
             )
+        elif other.type == "PolynomialFraction":
+            return other.__mul__(
+                other=RegularFraction(
+                    numerator=self.numerator,
+                    denominator=self.denominator
+                )
+            )
 
     def __truediv__(self, other):  # 除
         # 乘 1/other
@@ -119,6 +133,28 @@ class RegularFraction(FractionABC):
                     denominator=other.numerator,
                     numerator_variable_list=copy.deepcopy(other.denominator_variable_list),
                     denominator_variable_list=copy.deepcopy(other.numerator_variable_list)
+                )
+            )
+        elif other.type == "Polynomial":
+            from Unities.Variable_class.PolynomialFraction_class import PolynomialFraction
+            from Unities.Variable_class.Polynomial_class import Polynomial
+            return PolynomialFraction(
+                polynomial_numerator=Polynomial(
+                    polynomial_body_list=[RegularFraction(
+                        numerator=self.numerator,
+                        denominator=self.denominator
+                    )]
+                ),
+                polynomial_denominator=other
+            )
+        elif other.type == "PolynomialFraction":
+            from Unities.Variable_class.VarableFraction_class import VariableFraction
+            from Unities.Variable_class.RegularVariable_class import RegularVariable
+            from Unities.Variable_class.PolynomialFraction_class import PolynomialFraction
+            return self.__mul__(
+                PolynomialFraction(
+                    polynomial_numerator=other.polynomial_denominator,
+                    polynomial_denominator=other.polynomial_numerator
                 )
             )
 
