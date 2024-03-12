@@ -95,4 +95,4 @@ if __name__ == '__main__':
     # print(pf_2)
     print(pf)
     # print(pf + x)
-    print(pf / x)
+    print(vf1 / pf)

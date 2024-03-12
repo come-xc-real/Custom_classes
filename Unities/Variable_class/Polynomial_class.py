@@ -153,12 +153,18 @@ class Polynomial:
             return Polynomial(
                 polynomial_body_list=polynomial_body_list_new
             )
-        if other.type == "Polynomial":
+        elif other.type == "Polynomial":
             polynomial_body_list_new = copy.deepcopy(self.polynomial_body_list)
             for polynomial_body_i in other.polynomial_body_list:
                 polynomial_body_list_new.append(polynomial_body_i)
             return Polynomial(
                 polynomial_body_list=polynomial_body_list_new
+            )
+        elif other.type == "PolynomialFraction":
+            return other.__add__(
+                other=Polynomial(
+                    polynomial_body_list=self.polynomial_body_list
+                )
             )
 
     def __sub__(self, other):  # 减
@@ -180,6 +186,12 @@ class Polynomial:
             return self.__mul__(
                 other=Polynomial(
                     polynomial_body_list=[other]
+                )
+            )
+        elif other.type == "PolynomialFraction":
+            return other.__mul__(
+                other=Polynomial(
+                    polynomial_body_list=self.polynomial_body_list
                 )
             )
 
@@ -215,7 +227,28 @@ class Polynomial:
                 )
             )
         elif other.type == "Polynomial":
-            pass
+            from Unities.Variable_class.PolynomialFraction_class import PolynomialFraction
+            return PolynomialFraction(
+                polynomial_numerator=Polynomial(
+                    polynomial_body_list=self.polynomial_body_list
+                ),
+                polynomial_denominator=Polynomial(
+                    polynomial_body_list=other.polynomial_body_list
+                )
+            )
+        elif other.type == "PolynomialFraction":
+            from Unities.Variable_class.PolynomialFraction_class import PolynomialFraction
+            from Unities.Fraction_class.RegularFraction_class import RegularFraction
+            return self.__mul__(
+                other=(PolynomialFraction(
+                    polynomial_numerator=Polynomial(
+                        polynomial_body_list=[RegularFraction(1, 1)]
+                    ),
+                    polynomial_denominator=Polynomial(
+                        polynomial_body_list=[RegularFraction(1, 1)]
+                    )
+                ) / other)
+            )
 
     def __neg__(self):  # 取负 用于直接创建 -对象
         polynomial_body_list_new = copy.deepcopy(self.polynomial_body_list)

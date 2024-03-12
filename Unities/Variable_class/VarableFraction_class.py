@@ -58,6 +58,15 @@ class VariableFraction(RegularFraction):
                     denominator_variable_list=copy.deepcopy(self.denominator_variable_list)
                 )
             )
+        elif other.type == "PolynomialFraction":
+            return other.__add__(
+                other=VariableFraction(
+                    numerator=self.numerator,
+                    denominator=self.denominator,
+                    numerator_variable_list=self.numerator_variable_list,
+                    denominator_variable_list=self.denominator_variable_list
+                )
+            )
 
     def __sub__(self, other):  # 减
         # 加负other
@@ -108,6 +117,15 @@ class VariableFraction(RegularFraction):
                     ]
                 )
             )
+        elif other.type == "PolynomialFraction":
+            return other.__mul__(
+                other=VariableFraction(
+                    numerator=self.numerator,
+                    denominator=self.denominator,
+                    numerator_variable_list=copy.deepcopy(self.numerator_variable_list),
+                    denominator_variable_list=copy.deepcopy(self.denominator_variable_list)
+                )
+            )
 
     def __truediv__(self, other):  # 除
         # 乘 1/other
@@ -137,7 +155,23 @@ class VariableFraction(RegularFraction):
                 )
             )
         elif other.type == "Polynomial":
-            pass
+            from Unities.Variable_class.PolynomialFraction_class import PolynomialFraction
+            from Unities.Variable_class.Polynomial_class import Polynomial
+            return PolynomialFraction(
+                polynomial_numerator=Polynomial(
+                    polynomial_body_list=[VariableFraction(
+                        numerator=self.numerator,
+                        denominator=self.denominator,
+                        numerator_variable_list=self.numerator_variable_list,
+                        denominator_variable_list=self.denominator_variable_list
+                    )]
+                ),
+                polynomial_denominator=other
+            )
+        elif other.type == "PolynomialFraction":
+            return self.__mul__(
+                other=(RegularFraction(1, 1) / other)
+            )
 
     def __neg__(self):  # 取负 用于直接创建 -对象
         # 创建一个分子为相反数的分数类
