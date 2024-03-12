@@ -24,7 +24,6 @@ class VariableFraction(RegularFraction):
                     self.denominator_variable_list[j].char = ""
                     continue
 
-
     def __str__(self):
         numerator_variable_str = ""
         for numerator_variable in self.numerator_variable_list:
@@ -35,7 +34,7 @@ class VariableFraction(RegularFraction):
         return f"({self.numerator}{numerator_variable_str}/{self.denominator}{denominator_variable_str})"
 
     def __add__(self, other):  # 加
-        if other.type == "RegularVariable" or "VariableFraction" or "RegularFraction":
+        if other.type in ["RegularVariable", "VariableFraction", "RegularFraction"]:
             from Unities.Variable_class.Polynomial_class import Polynomial
             # 返回多项式
             return Polynomial(

@@ -6,10 +6,46 @@ class Polynomial:
 
     def __init__(self, polynomial_body_list: list):
         self.polynomial_body_list = polynomial_body_list
-        self._clean_variable_in_variable_fraction()
-        self._clean_polynomial()
+        self.clean()
         self.str = self._get_str()
         self.type = "Polynomial"
+
+    def clean(self):
+        self._clean_polynomial_body_all_variable_fraction()
+        self._clean_variable_in_variable_fraction()
+        self._clean_polynomial()
+        self._clean_all_numerator_0_polynomial_body()
+
+    def _clean_all_numerator_0_polynomial_body(self):
+        flg = False
+        for i in range(len(self.polynomial_body_list)):
+            if self.polynomial_body_list[i].numerator == 0:
+                self.polynomial_body_list.remove(self.polynomial_body_list[i])
+                flg = True
+                break
+        if flg:
+            return self._clean_all_numerator_0_polynomial_body()
+
+    def _clean_polynomial_body_all_variable_fraction(self):
+        for i in range(len(self.polynomial_body_list)):
+            if self.polynomial_body_list[i].type == "RegularFraction":
+                from Unities.Variable_class.VarableFraction_class import VariableFraction
+                from Unities.Variable_class.RegularVariable_class import RegularVariable
+                self.polynomial_body_list[i] = VariableFraction(
+                    numerator=self.polynomial_body_list[i].numerator,
+                    denominator=self.polynomial_body_list[i].denominator,
+                    numerator_variable_list=[RegularVariable("")],
+                    denominator_variable_list=[RegularVariable("")]
+                )
+            elif self.polynomial_body_list[i].type == "RegularVariable":
+                from Unities.Variable_class.VarableFraction_class import VariableFraction
+                from Unities.Variable_class.RegularVariable_class import RegularVariable
+                self.polynomial_body_list[i] = VariableFraction(
+                    numerator=1,
+                    denominator=1,
+                    numerator_variable_list=[self.polynomial_body_list[i]],
+                    denominator_variable_list=[RegularVariable("")]
+                )
 
     def _clean_variable_in_variable_fraction(self):
         polynomial_body_list_new = []
@@ -49,10 +85,10 @@ class Polynomial:
             for j in range(len(self.polynomial_body_list)):
                 if i != j and self.polynomial_body_list[i].type == "VariableFraction" \
                         and self.polynomial_body_list[j].type == "VariableFraction":
-                    if len(self.polynomial_body_list[i].numerator_variable_list) == len(
-                            self.polynomial_body_list[j].numerator_variable_list) and len(
-                        self.polynomial_body_list[i].denominator_variable_list) == len(
-                            self.polynomial_body_list[i].denominator_variable_list):
+                    if len(self.polynomial_body_list[i].numerator_variable_list) \
+                            == len(self.polynomial_body_list[j].numerator_variable_list) and \
+                            len(self.polynomial_body_list[i].denominator_variable_list) \
+                            == len(self.polynomial_body_list[i].denominator_variable_list):
                         list_0_n = [body_i.char for body_i in self.polynomial_body_list[i].numerator_variable_list]
                         list_0_d = [body_i.char for body_i in self.polynomial_body_list[i].denominator_variable_list]
                         list_1_n = [body_j.char for body_j in self.polynomial_body_list[j].numerator_variable_list]
@@ -111,14 +147,13 @@ class Polynomial:
         return f"({self.str})"
 
     def __add__(self, other):  # 加
-        if other.type == "RegularFraction" or "RegularVariable" or "VariableFraction":
+        if other.type in ["RegularFraction", "RegularVariable", "VariableFraction"]:
             polynomial_body_list_new = copy.deepcopy(self.polynomial_body_list)
             polynomial_body_list_new.append(other)
             return Polynomial(
                 polynomial_body_list=polynomial_body_list_new
             )
-
-        elif other.type == "Polynomial":
+        if other.type == "Polynomial":
             polynomial_body_list_new = copy.deepcopy(self.polynomial_body_list)
             for polynomial_body_i in other.polynomial_body_list:
                 polynomial_body_list_new.append(polynomial_body_i)
@@ -140,7 +175,7 @@ class Polynomial:
             return Polynomial(
                 polynomial_body_list=polynomial_body_list_new
             )
-        elif other.type == "RegularFraction" or "RegularVariable" or "VariableFraction":
+        elif other.type in ["RegularFraction", "RegularVariable", "VariableFraction"]:
             from Unities.Variable_class.VarableFraction_class import VariableFraction
             return self.__mul__(
                 other=Polynomial(
@@ -200,5 +235,6 @@ if __name__ == '__main__':
     n = RegularVariable("")
     vf0 = VariableFraction(1, 3, [x, x], [y, y])
     vf1 = VariableFraction(1, 2, [x, x], [y, y])
-    p = vf1 + vf0
-    print(p)
+    p = vf1 + vf0 + x + y
+    p_1 = vf1 + vf0 + x + y
+    print(p + p_1)

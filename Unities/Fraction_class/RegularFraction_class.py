@@ -30,7 +30,7 @@ class RegularFraction(FractionABC):
         #     # 如果和整数相加, 将整数转换成底数为1的分数
         #     return self.__add__(other=RegularFraction(other, 1))
 
-        elif other.type == "RegularVariable" or "VariableFraction":
+        elif other.type in ["RegularVariable", "VariableFraction"]:
             # 返回多项式
             from Unities.Variable_class.Polynomial_class import Polynomial
             return Polynomial(
