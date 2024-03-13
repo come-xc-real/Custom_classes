@@ -6,6 +6,25 @@ class PolynomialFraction:
         self.polynomial_numerator = polynomial_numerator
         self.polynomial_denominator = polynomial_denominator
         self.type = "PolynomialFraction"
+        self._clean()
+
+    def _clean(self):
+        self._clean_all_variable_in_denominator()
+
+    def _clean_all_variable_in_denominator(self):
+        """将多项式分数类的上下多项式中参数分数类的分母中的参数约掉"""
+        flg = False
+        from Unities.Variable_class.RegularVariable_class import RegularVariable
+        variable_list = []
+        for ni in range(len(self.polynomial_numerator.polynomial_body_list)):
+            char_i = self.polynomial_numerator.polynomial_body_list[ni].denominator_variable_list[0].char
+            if char_i != "":
+                self.polynomial_numerator = self.polynomial_numerator * RegularVariable(f"{char_i}")
+                self.polynomial_denominator = self.polynomial_denominator * RegularVariable(f"{char_i}")
+                flg = True
+                break
+        if flg:
+            return self._clean_all_variable_in_denominator()
 
     def __add__(self, other):
         if other.type == "PolynomialFraction":
