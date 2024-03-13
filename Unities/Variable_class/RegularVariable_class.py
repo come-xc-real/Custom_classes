@@ -26,12 +26,18 @@ class RegularVariable(VariableABC):
         )
 
     def __truediv__(self, other):
+        from Unities.Fraction_class.RegularFraction_class import RegularFraction
+        return self.__mul__(
+            other=(RegularFraction(1, 1)/other)
+        )
+
+    def __neg__(self):  # 取负 用于直接创建 -对象
         from Unities.Variable_class.VarableFraction_class import VariableFraction
         return VariableFraction(
             numerator=-1,
             denominator=1,
-            numerator_variable_list=[RegularVariable(char=self.char)],
-            denominator_variable_list=[RegularVariable(char="")]
+            numerator_variable_list=[RegularVariable(f"{self.char}")],
+            denominator_variable_list=[RegularVariable("")]
         )
 
 
