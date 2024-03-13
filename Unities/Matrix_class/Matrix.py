@@ -256,10 +256,10 @@ class Matrix:
                             count += self.body_cleaned[x][j] * other_rotate_90.body_cleaned[y][j]
                         matrix_body_copy[x][y] = count
 
-        return Matrix(
-            matrix_body=copy.deepcopy(matrix_body_copy),
-            is_matrix_body_cleaned=True
-        )
+            return Matrix(
+                matrix_body=copy.deepcopy(matrix_body_copy),
+                is_matrix_body_cleaned=True
+            )
 
 
 
