@@ -38,6 +38,7 @@ class Matrix:
             else:
                 raise "无法相加"
 
+
     def __sub__(self, other):  # 减
         if other.type == "Matrix":
             return self.__add__(-other)
@@ -224,23 +225,64 @@ class Matrix:
             is_matrix_body_cleaned=True,
         )
 
+    def rotate_90(self):
+        other_rotate_90 = []
+        for xi in range(self.x_len):
+            other_rotate_90.append([])
+        for yi in range(self.y_len):
+            for xi in range(self.x_len):
+                other_rotate_90[xi].append(self.body_cleaned[yi][xi])
+        return Matrix(
+            matrix_body=copy.deepcopy(other_rotate_90),
+            is_matrix_body_cleaned=True
+        )
+
+    def __mul__(self, other):
+        if other.type == "Matrix":
+            matrix_body_copy = []
+            other_rotate_90 = other.rotate_90()
+            for yi in range(self.y_len):
+                matrix_body_copy.append([])
+                for i in range(other_rotate_90.y_len):
+                    matrix_body_copy[yi].append('')
+
+            if self.x_len == other_rotate_90.x_len:
+                from Unities.Fraction_class.RegularFraction_class import RegularFraction
+
+                for x in range(len(matrix_body_copy)):
+                    for y in range(len(matrix_body_copy[x])):
+                        count = RegularFraction(0, 1)
+                        for j in range( other_rotate_90.x_len):
+                            count += self.body_cleaned[x][j] * other_rotate_90.body_cleaned[y][j]
+                        matrix_body_copy[x][y] = count
+
+            return Matrix(
+                matrix_body=copy.deepcopy(matrix_body_copy),
+                is_matrix_body_cleaned=True
+            )
+
+
+
+
+
+
 
 if __name__ == '__main__':
-    m_2 = Matrix([
-        [1, 3, 5, 2.5, 4.004],
-        [2, 3, 5.04, 6, 8],
-        [1.0000001, 2, 3, 4, 5]
-    ])
-    m_1 = Matrix([
-        [0, 3, 5, 2.5, 4.004],
-        [1, 3, 5.04, 6, 8],
-        [0, 2, 3, 4, 5]
-    ])
-    print(m_1)
+    # m_2 = Matrix([
+    #     [1, 3, 5, 2.5, 4.004],
+    #     [2, 3, 5.04, 6, 8],
+    #     [1.0000001, 2, 3, 4, 5]
+    # ])
+    # m_1 = Matrix([
+    #     [0, 3, 5, 2.5, 4.004],
+    #     [1, 3, 5.04, 6, 8],
+    #     [0, 2, 3, 4, 5]
+    # ])
+    # print(m_1)
     # print(m_2)
     # print(m_2 + m_1)
-    m_1_minimalist = m_1.minimalist_matrix_by_row(row_index_list=[0,2,1])
-    print(m_1_minimalist)
+    # m_1_minimalist = m_1.minimalist_matrix_by_row(row_index_list=[0, 2, 1])
+    # print(m_1_minimalist)
     # print(m_1)
     # m_1_transpose = m_1.matrix_transpose()
     # print(m_1_transpose)
@@ -251,3 +293,8 @@ if __name__ == '__main__':
     #     for j in i:
     #         print(j)
     # print(4.004 * 1000)
+    x_1 = Matrix([[1, 2],
+                  [3, 4]])
+    x_2 = Matrix([[1, 2, 5],
+                  [3, 8, 7]])
+    print(x_1 * x_2)
