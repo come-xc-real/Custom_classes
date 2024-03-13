@@ -188,7 +188,7 @@ if __name__ == '__main__':
 
     x = RegularVariable("x")
     y = RegularVariable("y")
-    vf = VariableFraction(1, 3, [x, y], [y])
+    vf = VariableFraction(1, 3, [x, y], [x,y])
     vf_1 = VariableFraction(1, 3, [x, y], [y])
     print(vf)
     print(-vf)

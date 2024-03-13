@@ -219,28 +219,49 @@ class Matrix:
     #     minimalist_matrix_body = list(zip(*minimalist_matrix_body))
     #     return minimalist_matrix_body
     def matrix_transpose(self):
+        """矩阵转置"""
         return Matrix(
             matrix_body=list(zip(*copy.deepcopy(self.body_cleaned))),
             is_matrix_body_cleaned=True,
         )
 
+    def augmented_matrix(self, matrix_body):
+        """添加增广矩阵"""
+        augmented_matrix = copy.deepcopy(self.body_cleaned)
+        if self.y_len != matrix_body.y_len:
+            raise "不能做增广"
+        for i in range(self.y_len):
+            for j in range(matrix_body.x_len):
+                augmented_matrix[i].append(matrix_body.body_cleaned[i][j])
+        return Matrix(matrix_body=augmented_matrix, is_matrix_body_cleaned=True)
+
+    def matrix_inversion(self):
+        """逆矩阵"""
+        identity_matrix = self.minimalist_matrix_by_row()
+        augmented_matrix = self.augmented_matrix(matrix_body=identity_matrix)
+        inversion_matrix = augmented_matrix.minimalist_matrix_by_row()
+        inversion_matrix_body_list = [inversion_matrix.body_cleaned[i][self.y_len:] for i in range(self.y_len)]
+        return Matrix(matrix_body=inversion_matrix_body_list, is_matrix_body_cleaned=True)
+
 
 if __name__ == '__main__':
-    m_2 = Matrix([
-        [1, 3, 5, 2.5, 4.004],
-        [2, 3, 5.04, 6, 8],
-        [1.0000001, 2, 3, 4, 5]
-    ])
+    # m_2 = Matrix([
+    #     [1, 3, 5, 2.5, 4.004],
+    #     [2, 3, 5.04, 6, 8],
+    #     [1.0000001, 2, 3, 4, 5]
+    # ])
     m_1 = Matrix([
-        [0, 3, 5, 2.5, 4.004],
-        [1, 3, 5.04, 6, 8],
-        [0, 2, 3, 4, 5]
+        [1, 0, 0, ],
+        [0, 1, 0, ],
+        [0, 0, 1, ]
     ])
+    m_2 = m_1.matrix_inversion()
     print(m_1)
+    print(m_2)
     # print(m_2)
     # print(m_2 + m_1)
-    m_1_minimalist = m_1.minimalist_matrix_by_row(row_index_list=[0, 2, 1])
-    print(m_1_minimalist)
+    # m_1_minimalist = m_1.minimalist_matrix_by_row(row_index_list=[0, 2, 1])
+    # print(m_1_minimalist)
     # print(m_1)
     # m_1_transpose = m_1.matrix_transpose()
     # print(m_1_transpose)
